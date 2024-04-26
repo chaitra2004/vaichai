@@ -1,0 +1,30 @@
+#include <lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   PINSEL0=0x00000000;
+	 PINSEL1=0X00000000;
+   IO0DIR=0X000F0000;//making p0.16 to p0.19 as oitput
+	 IO0SET=0X000F0000;//led's are turned off
+ while(1)
+   {
+		 if((IOPIN0&0x00001000)==0x00001000)
+		 {
+    IOCLR0=0x000F0000;//led's are turned on
+    delay();
+		IOSETO=0x000F0000;//led's are turned off
+    delay();
+			
+		 }
+		 else
+		 {
+			 IO0SET=0X000F0000;//led's are turned off
+		 }
+   }
+ }	 
+void delay(unsigned int j)
+   {
+   unsigned int i;
+   for(i=0;i<j;i++);
+   } 
+	 
