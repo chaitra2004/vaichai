@@ -1,0 +1,77 @@
+# include <LPC21xx.h>
+
+void delay(void);
+void serial(void);
+unsigned char mg;
+unsigned int i,j,k;
+void clockwise(void);
+void anticlockwise(void);
+unsigned long int var1,var2;
+
+int main()
+{
+	unsigned int i;
+	unsigned char msg[]={"bvbeng"};
+	serial();
+	
+	while(1)
+	{
+		
+	while(!(U0LSR & 0x01));
+	{	
+		U0THR=mg;
+		
+		if(mg=='c')
+		
+		{
+			PINSEL0=0X000000000;
+			IO0DIR =0X0000F000;
+			for(j=0;j<50;j++)
+			clockwise();
+			for(k=0;k<65000;k++);
+			for(k=0;k<65000;k++);
+		}
+		else if(mg=='a')
+		{ PINSEL0=0X00000000;
+			IO0DIR =0X0000F000;
+			for(j=0;j<50;j++)
+			anticlockwise();
+			for(k=0;k<65000;k++);
+			for(k=0;k<65000;k++);
+		}
+	}
+		
+		delay();
+	}
+
+
+void serial()
+{
+	PINSEL0=0x00000005;
+	U0LCR=0X83;
+	U0DLL=0X61;
+	U0LCR=0X03;
+}
+void delay()
+{
+unsigned int i;
+for(i=0;i<10000;i++);
+}
+void clockwise(void)
+{ var1=0x00008000;
+	for(i=0;i<=3;i++)
+	{ var1=var1;
+		for(k=0;k<3000;k++);
+	}
+}
+
+void anticlockwise(void)
+{
+	var1=0x00010000;
+	for(i=0;i<=3;i++)
+	{
+		var1=var1>>1;
+		IO0PIN=var1;
+		for(k=0;k<3000;k++);
+	}
+}	
