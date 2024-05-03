@@ -1,0 +1,224 @@
+seven segment display 1;
+
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   unsigned int i,j;
+   unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+   PINSEL1 = 0X00000000;
+   IODIR0 = 0XC0FF0000;
+   IOSET0 = 0XC0000000;
+   IOCLR0 = 0X00FF0000;
+   while(1)
+   { 
+       for(i=0;i<16;i++)
+        {
+           IOSET0 = disp[i];
+           delay();
+           IOCLR0 = 0x00ff0000;
+       }
+   }
+}
+void delay(void)
+{
+   unsigned long int j;
+   for(j=o;j<6500000;j++);
+}
+
+
+
+
+keypad
+
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+    unsigned int r0[5]={0xee,0xde,0xbe,0x7e};
+    unsigned int r1[5]={0xed,0xdd,0xbd,0x7d};
+    unsigned int r2[5]={0xeb,0xdb,0xbb,0x7b};
+    unsigned int r3[5]={0xe7,0xd7,0xb7,0x77};
+    unsigned int i,value;
+    PINSEL1 = 0x00000000;
+    PINSEL2 = 0x00000000;
+    IODIR1 = 0xFFF0FFFF;
+    IODIR0 = 0XF0FF0000;
+    IOPIN1 = 0X00FF0000;
+    while(1)
+    {
+        IOCLR1 = 0X00100000;
+        value = IOPIN1 & 0X00FF0000;
+        for(i=0;i<4;i++)
+        {
+            if(value ==r0[i])
+            {
+                display(i);
+            }
+        }
+        IOCLR1 = 0X00200000;
+        value = IOPIN1 & 0x00FF0000;
+        for(i=0;i<4;i++)
+        {
+            if(value ==r1[i])
+            {
+                display(i+4);
+            }
+        }
+        IOCLR1 = 0X00400000;
+        value = IOPIN1 & 0x00FF0000;
+        for(i=0;i<4;i++)
+        {
+            if(value ==r2[i])
+            {
+                display(i+8);
+            }
+        }
+        IOCLR1 = 0X00800000;
+        value = IOPIN1 & 0x00FF0000;
+        for(i=0;i<4;i++)
+        {
+            if(value ==r3[i])
+            {
+                display(i+12);
+            }
+        }
+    }
+}
+void display(unsigned int i)
+{
+   unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+   unsigned int x;
+   PINSEL1 = 0X00000000;
+   IODIR0 = 0XC0FF0000;
+   IOSET0 = 0XC0000000;
+   IOSET0 = disp[i];
+   for(x=0;x<=1000000;x++);
+   IOCLR0 = disp[i];
+   for(x=0;x<=1000000;x++);
+}
+
+  
+
+seven segment display 2;
+
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   unsigned int i,j;
+   unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+   PINSEL1 = 0X00000000;
+   IODIR0 = 0X00FF0000;
+   IOSET0 = 0X80000000;
+   while(1)
+   { 
+       for(i=0;i<16;i++)
+        {
+           IOSET0 = disp[i];
+           delay(100000);
+           IOCLR0 = 0x00ff0000;
+           delay(100000);
+       }
+   }
+}
+void delay(unsigned int x)
+{
+   unsigned long int j;
+   for(j=0;j<x;j++);
+}
+
+keypad final:
+#include<lpc21xx.h>
+void delay(unsigned int);
+void disp(unsigned int);
+int main()
+{
+	unsigned long int value,i;
+	unsigned int row0[4]={0x00ee0000,0x00ed0000,0x00eb0000,0x00e70000};
+		unsigned int row1[4]={0x00de0000,0x00dd0000,0x00db0000,0x00d70000};
+			unsigned int row2[4]={0x00be0000,0x00bd0000,0x00bb0000,0x00b70000};
+				unsigned int row3[4]={0x007e0000,0x007d0000,0x007b0000,0x00770000};
+					
+	IO1DIR=0xFFF0FFFF;
+					
+	PINSEL1=0x00000000;
+	IODIR0=0xf0ff0000;
+	IOSET0=0xf0000000;
+	while(1)
+	{
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00100000;
+		value=IOPIN1;
+		delay(50000);
+		value = value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row0[i])
+			{
+				disp(i);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00200000;
+		value=IOPIN1;
+		delay(50000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row1[i])
+			{
+				disp(i+4);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00400000;
+		value=IOPIN1;
+		delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row2[i])
+			{
+				disp(i+8);
+				delay(50000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00000000;
+		value=IOPIN1;
+		delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row3[i])
+			{
+				disp(i+12);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+	}
+}
+      void disp(unsigned int temp)
+				{
+					unsigned int i;
+					unsigned int da[16]={0x003F0000,0x00060000,0x005B0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,
+						                   0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+				 IOCLR0=0x00ff0000;
+		     i=temp;
+		     IOSET0=da[i];
+		     delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+	      }
+				void delay(unsigned int del)
+				{
+					unsigned int k;
+					for(k=0;k<del;k++);
+				}
+					
+						
+		
+	
+
+
