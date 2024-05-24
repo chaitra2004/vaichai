@@ -1,0 +1,623 @@
+seven segment display 1;
+
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   unsigned int i,j;
+   unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+   PINSEL1 = 0X00000000;
+   IODIR0 = 0XC0FF0000;
+   IOSET0 = 0XC0000000;
+   IOCLR0 = 0X00FF0000;
+   while(1)
+   { 
+       for(i=0;i<16;i++)
+        {
+           IOSET0 = disp[i];
+           delay();
+           IOCLR0 = 0x00ff0000;
+       }
+   }
+}
+void delay(void)
+{
+   unsigned long int j;
+   for(j=o;j<6500000;j++);
+}
+
+
+seven segment display 2;
+
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   unsigned int i,j;
+   unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+   PINSEL1 = 0X00000000;
+   IODIR0 = 0X00FF0000;
+   IOSET0 = 0X80000000;
+   while(1)
+   { 
+       for(i=0;i<16;i++)
+        {
+           IOSET0 = disp[i];
+           delay(100000);
+           IOCLR0 = 0x00ff0000;
+           delay(100000);
+       }
+   }
+}
+void delay(unsigned int x)
+{
+   unsigned long int j;
+   for(j=0;j<x;j++);
+}
+
+
+stepper uart
+#include <LPC21XX.h>
+void clockwise(void);
+void anticlock_wise(void);
+void delay(void);
+void serial(void);
+unsigned char mg;
+unsigned long int var1,var2;
+unsigned int i=0,j=0,k=0;
+
+int main(void)
+{
+PINSEL0=0x00ffffff;
+IO0DIR=0x0000f000;
+serial();
+while(1)
+{
+	mg=U0RBR;
+	U0THR=mg;
+	delay();
+	if(mg=='c')
+	{
+         for(j=0;j<100;j++)
+         clockwise();
+
+        for(k=0;k<65000;k++);
+        for(k=0;k<65000;k++);
+	}
+	else if(mg=='a')
+	{
+         for(j=0;j<50;j++) 
+         anticlockwise();
+         for(k=0;k<65000;k++);
+         for(k=0;k<65000;k++);
+	}
+}
+}
+void clockwise(void)
+{
+var1=0x00000800;
+for(i=0;i<=3;i++)
+{
+var1=var1<<1 ;
+IO0PIN =var1;
+for(k=0;k<3000;k++);
+for(k=0;k<3000;k++);
+}
+}
+
+void anticlock_wise(void)
+{
+var2=0x00010000;
+for(i=0;i<=3;i++)
+{
+var2=var2>>1;
+IO0PIN =var2;
+for(k=0;k<3000;k++);
+for(k=0;k<3000;k++);
+}
+}
+void serial(void)
+{
+   PINSEL0=0x00000005;
+   U0LCR=0x83;
+   U0DLL=0x61;
+   U0LCR=0x03;
+}
+void delay(void)
+{
+   unsigned int i;
+   for(i=0;i<1000000;i++);
+}
+
+stepper motor
+#include <LPC21XX.h>
+void clockwise(void);
+void anticlockwise(void);
+unsigned long int var1,var2;
+unsigned int i=0,j=0,k=0;
+
+int main(void)
+{
+PINSEL0=0x00ffffff;
+IO0DIR=0x0000f000;
+
+while(1)
+{
+for(j=0;j<100;j++)
+clockwise();
+
+for(k=0;k<65000;k++);
+for(k=0;k<65000;k++);
+
+for(j=0;j<50;j++) 
+anticlockwise();
+
+for(k=0;k<65000;k++);
+for(k=0;k<65000;k++);
+
+}
+}
+void clockwise(void)
+{
+var1=0x00000800;
+for(i=0;i<=3;i++)
+{
+var1=var1<<1 ;
+IO0PIN =var1;
+for(k=0;k<3000;k++);
+for(k=0;k<3000;k++);
+}
+}
+
+void anticlockwise(void)
+{
+var2=0x00010000;
+for(i=0;i<=3;i++)
+{
+var2=var2>>1;
+IO0PIN =var2;
+for(k=0;k<3000;k++);
+for(k=0;k<3000;k++);
+}}
+
+
+
+keypad final:
+#include<lpc21xx.h>
+void delay(unsigned int);
+void disp(unsigned int);
+int main()
+{
+	unsigned long int value, i;
+	unsigned int row0[4]={0x00ee0000,0x00ed0000,0x00eb0000,0x00e70000};
+	unsigned int row1[4]={0x00de0000,0x00dd0000,0x00db0000,0x00d70000};
+	unsigned int row2[4]={0x00be0000,0x00bd0000,0x00bb0000,0x00b70000};
+	unsigned int row3[4]={0x007e0000,0x007d0000,0x007b0000,0x00770000};
+					
+	IO1DIR=0xFFF0FFFF;			
+	PINSEL1=0x00000000;
+	IODIR0=0xf0ff0000;
+	IOSET0=0xf0000000;
+	while(1)
+	{
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00100000;
+		value=IOPIN1;
+		delay(50000);
+		value = value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row0[i])
+			{
+				disp(i);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00200000;
+		value=IOPIN1;
+		delay(50000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row1[i])
+			{
+				disp(i+4);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00400000;
+		value=IOPIN1;
+		delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row2[i])
+			{
+				disp(i+8);
+				delay(50000);
+			}
+		}
+		IO1PIN=0x00ff0000;
+		IOCLR1=0x00000000;
+		value=IOPIN1;
+		delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+		value=value&0x00ff0000;
+		for(i=0;i<4;i++)
+		{
+			if(value==row3[i])
+			{
+				disp(i+12);
+				delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+			}
+		}
+	}
+}
+      
+void disp(unsigned int temp)
+{
+   unsigned int i;
+   unsigned int da[16]={0x003F0000,0x00060000,0x005B0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+		     IOCLR0=0x00ff0000;
+		     i=temp;
+		     IOSET0=da[i];
+		     delay(65000);delay(65000);delay(65000);delay(65000);delay(65000);
+}
+void delay(unsigned int del)
+{
+   unsigned int k;
+   for(k=0;k<del;k++);
+}
+
+
+ADC//
+#include<lpc214x.h>
+#include<stdio.h>
+unsigned int i;
+unsigned int adc_value =0,temp_adc=0;
+char val[30];
+void delay(unsigned long int n)
+{
+	unsigned int j;
+	for(j=0;j<n;j++);
+}
+void serial()
+{
+	PINSEL0 = 0X00000005;
+	U0LCR = 0X83;
+	U0DLL = 0X61;
+	U0LCR = 0X03;
+}
+int main()
+{
+	PINSEL1 = 0X00040000;
+	serial();
+	while(1)
+	{
+		AD0CR = 0X09200010;
+		delay(1000);
+		while(!(AD0GDR)==0X80000000);
+		adc_value = AD0GDR;
+		adc_value >>=6;
+		adc_value &= 0X000003FF;
+		sprintf(val,"The digital value is %x",adc_value);
+		while(val[i]!='\0')
+		{
+			while(!(U0LSR & 0X20));
+			U0THR = val[i];
+			i++;
+		}
+		delay(20000);
+		U0THR = '\t';
+		i=0;
+	}
+}					
+	
+					
+UART///
+#include<lpc21xx.h>
+void delay(void);
+void serial(void);
+unsigned char mg;
+int main()
+{
+	 unsigned int i;
+	 unsigned char msg[3]="BVB";
+	 serial();
+	 while(1)
+	 {
+		 for(i=0;i<3;i++)
+		 {
+			 while(!(U0LSR & 0X20));
+			 U0THR = msg[i];
+		 }
+		 while(!(U0LSR &0X01));
+		 mg = U0RBR;
+		 U0THR = mg;
+		 delay();
+	 }
+}
+void serial()
+{
+	PINSEL0 = 0X00000005;
+	U0LCR = 0X83;
+	U0DLL = 0X61;
+	U0LCR = 0X03;
+}
+void delay()
+{
+	unsigned int i;
+	for(i=0;i<1000000;i++);
+}		
+
+
+INTRREPT///
+#include<lpc21xx.h>
+#include<stdio.h>
+void delay(unsigned int);
+void extint0_ISR(void)__irq;
+void delay(unsigned int);
+int main(void)
+{ 
+	PINSEL1 = 0X00000001;
+	EXTMODE = 0X00000001;
+	VICVectAddr0 = (unsigned long)extint0_ISR;
+	VICVectCntl0 = 0X20|14;
+	VICIntEnable|= 0X00004000;
+	while(1);
+}
+void extint0_ISR(void)__irq
+{
+	PINSEL1 |= 0X00000000;
+	IODIR0 = 0X00070000;
+	IOCLR0 = 0X00070000;
+	delay(1000000);
+	IOSET0 = 0X00070000;
+	delay(1000000);
+	EXTINT|= 0X00000001;
+	VICVectAddr = 0;
+}
+void delay(unsigned int x)
+{
+	unsigned int i;
+	for(i=0;i<x;i++);
+}	
+
+SQUARE WAVE
+#include<lpc214x.h>
+#include<stdio.h>
+void delay(unsigned int n);
+int main(void)
+{ 
+	int value;
+	PINSEL1 = 0X00080000;
+	while(1)
+	{
+		value = 1023;
+		DACR = ((1<<16)|(value<<6));
+		delay(100);
+		value=0;
+		DACR = ((1<<16)|(value<<6));
+		delay(100);
+	}
+}
+void delay(unsigned int n)
+{ 
+	int i;
+	for(i=0;i<n;i++);
+}
+
+TRIANGULAR WAVEFORM
+#include <lpc214x.h>
+#include <stdio.h>
+void delay(unsigned int n);
+int main(void)
+{
+    int value = 0;
+    int step = 10; // Adjust step size for finer control of the waveform
+    int direction = 1; // 1 for increasing, -1 for decreasing
+    
+    PINSEL1 = 0x00080000; // Configure pin P0.25 for DAC output
+    
+    while (1)
+    {
+        DACR = ((1 << 16) | (value << 6)); // Set DAC value
+        delay(100); // Adjust delay to control the frequency of the waveform
+        
+        value += step * direction;
+        
+        if (value >= 1023)
+        {
+            value = 1023;
+            direction = -1;
+        }
+        else if (value <= 0)
+        {
+            value = 0;
+            direction = 1;
+        }
+    }
+}
+
+void delay(unsigned int n)
+{
+    int i;
+    for (i = 0; i < n; i++);
+}
+
+
+LED BLINK///
+#include<lpc21xx.h>
+void delay(unsigned int);
+int main()
+{
+   int i;
+   PINSEL0 = 0x00000000;
+   IODIR0 = 0x000f0000;
+   while(1)
+   { 
+      IOCLR0 = 0x000f0000;
+      delay(1000000);
+      IOSET0 = 0x000f0000;
+      delay(1000000);
+  }
+}
+void delay(unsigned int j)
+{
+   int x;
+   for(x=0;x<j;x++);
+}
+
+
+DC MOTOR///
+#include<lpc214x.h>
+void clockwise(void);
+void anticlockwise(void);
+unsigned int j=0,x;
+int main()
+{ 
+   PINSEL0 = 0x00000000;
+   IODIR0 = 0x00000300;
+   while(1)
+   {
+      IOCLR0 = 0x00000300;
+      if((IOPIN0 & 0x00001000)==0x00001000)
+       {
+         clockwise();
+         for(j=0;j<100000;j++)
+       }
+      else
+      {
+         I0CLR0 = 0x00001100;
+         anticlockwise();
+         for(j=0;j<100000;j++);
+      }
+}
+void clockwise(void)
+{
+   for(j=0;j<100000;j++);
+   I0SET0 = 0x00000300;
+}
+void anticlockwise(void)
+{ 
+  for(j=0;j<100000;j++);
+  IOSET0 = 0x00000100;
+}
+
+
+  
+REAL TIME CLOCK/// 
+#include<lpc21xx.h>
+#include<stdio.h>
+char arr1[10],arr2[10],arr3[10];
+unsigned int i,x,y,z;
+void rtc(void)
+{
+	PREINT = 0X5A;
+	PREFRAC = 0X46C0;
+	CCR = 0X00;
+	SEC =50;
+	MIN =23;
+	HOUR =3;
+	CCR =0X01;
+}
+void serial()
+{ 
+	PINSEL0 = 0X00000005;
+	IODIR1 = 0X00FF0000;
+	U0LCR = 0X00000083;
+	U0DLM = 0X00;
+	U0DLL = 0X61;
+	U0LCR = 0X00000003;
+}
+void delay(void)
+{
+	int i;
+	for(i=0;i<20000000;i++);
+}
+int main()
+{
+	serial();
+	rtc();
+	while(1)
+	{
+		i=0;
+		x=SEC;
+		y=MIN;
+		z=HOUR;
+		sprintf(arr1,"sec:%d",x);
+		while(arr1[i]!='\0')
+		{
+			while(!(U0LSR&0X20));
+			U0THR = arr1[i];
+			i++;
+		}
+		U0THR = '\n';
+		i=0;
+		sprintf(arr1,"min:%d",y);
+		while(arr2[i]!='\0')
+		{
+			while(!(U0LSR&0X20));
+			U0THR = arr2[i];
+			i++;
+		}
+		U0THR = '\n';
+		i=0;
+	  sprintf(arr3,"hr:%d",z);
+		while(arr3[i]!='\0')
+		{
+			while(!(U0LSR&0X20));
+			U0THR = arr3[i];
+			i++;
+		}
+		U0THR = '\n';
+		i=0;
+	}
+}
+
+
+
+RTC with SEVEN SEGMENT DISPLAY///
+#include<lpc21xx.h>
+#include<stdio.h>
+void delay(unsigned int);
+void extint0_ISR(void)__irq;
+void delay(unsigned int);
+int main(void)
+{ 
+	PINSEL1 = 0X00000001;
+	EXTMODE = 0X00000001;
+	VICVectAddr0 = (unsigned long)extint0_ISR;
+	VICVectCntl0 = 0X20|14;
+	VICIntEnable|= 0X00004000;
+	while(1)
+	{
+		PINSEL0 |= 0X00000000;
+	  IODIR0 = 0X00070000;
+	  IOCLR0 = 0X00070000;
+	  delay(1000000);
+	  IOSET0 = 0X00070000;
+	  delay(1000000);
+	  EXTINT|= 0X00000001;
+	  VICVectAddr = 0;
+	}
+}
+void extint0_ISR(void)__irq
+{
+	unsigned int i,j;
+  unsigned int disp[16]={0x003f0000,0x00060000,0x005b0000,0x004f0000,0x00660000,0x006d0000,0x007d0000,0x00070000,0x007f0000,0x006f0000,0x00770000,0x007c0000,0x00390000,0x005e0000,0x00790000,0x00710000};
+  PINSEL1 = 0X00000000;
+  IODIR1 = 0X00FF0000;
+  IOSET1 = 0X80000000;
+	IOSET1 = disp[i];
+  delay(100000);
+  IOCLR1 = 0x00ff0000;
+  delay(100000);
+	i++;
+}
+void delay(unsigned int x)
+{
+	unsigned int j;
+	for(j=0;j<x;j++);
+}
