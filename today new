@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PLANES 10
+#define MAX_COUNTRY_NAME_LENGTH 30
+#define MIN_PLANE_ID 1000
+#define MAX_PLANE_ID 5000
+
+typedef struct {
+    int plane_id;
+    char destination[MAX_COUNTRY_NAME_LENGTH];
+    int seating_capacity;
+} Plane;
+
+int main() {
+    int N;
+    Plane planes[MAX_PLANES];
+    char CName[MAX_COUNTRY_NAME_LENGTH];
+    int first_runway_count = 0;
+    int second_runway_count = 0;
+    Plane second_runway_planes[MAX_PLANES];
+
+    // Reading number of planes
+    scanf("%d", &N);
+
+    // Constraint check for N
+    if (N < 0) {
+        printf("N value should not be negative.\n");
+        return 0;
+    }
+
+    // Reading planes information
+    for (int i = 0; i < N; ++i) {
+        scanf("%d %s %d", &planes[i].plane_id, planes[i].destination, &planes[i].seating_capacity);
+        
+        // Validation for Plane ID
+        if (planes[i].plane_id < MIN_PLANE_ID || planes[i].plane_id > MAX_PLANE_ID) {
+            printf("Plane id is not valid.\n");
+            return 0;
+        }
+    }
+
+    // Reading the destination country name
+    scanf("%s", CName);
+
+    // Processing planes
+    for (int i = 0; i < N; ++i) {
+        if (strcmp(planes[i].destination, CName) == 0) {
+            first_runway_count++;
+        } else {
+            second_runway_planes[second_runway_count] = planes[i];
+            second_runway_count++;
+        }
+    }
+
+    // Output results
+    printf("%d\n", first_runway_count);
+    printf("%d\n", second_runway_count);
+
+    for (int i = 0; i < second_runway_count; ++i) {
+        printf("%d %s %d\n", second_runway_planes[i].plane_id, second_runway_planes[i].destination, second_runway_planes[i].seating_capacity);
+    }
+
+    return 0;
+}
